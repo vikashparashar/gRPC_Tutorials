@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package calculator ;
+
+option go_package = "github/vikashparashar/gRPC_Tutorials/calculator/proto";
+
+// to find sum of two numbers
+message SumRequest{
+    int64 number_one = 1;
+    int64 number_two = 2;
+}
+message SumResponse{
+    int64 result = 1;
+}
+
+
+// to find prime numbers of a given number
+message PrimeRequest{
+    int64 number = 1;
+}
+message PrimeResponse{
+    int64 result = 1;
+}
+
+
+// to find average of given numbers
+message AverageRequest{
+    double number = 1;
+}
+message AverageResponse{
+    double result = 1;
+}
+
+
+// to find maximum/big number from given numbers
+message MaximumRequest{
+    int64 number = 1;
+}
+message MaximumResponse{
+    int64 result = 1;
+}
+
+// to find square root of a given number
+// we use int64 type value here because we want to be sure that client must pass a positive number
+// to restrict client to pass a negative number to find square off , we use int64 here but , we can also use double(float64 in golang or any other programming language)
+message SqrtRequest{
+    int64 number = 1; // can take double as per our requirments
+}
+message SqrtResponse{
+    int64 result = 1;
+}
+
+
+service CalculatorService{
+    rpc Sum (SumRequest) returns (SumResponse);
+    rpc Primes (PrimeRequest) returns (stream PrimeResponse);
+    rpc Average (stream AverageRequest) returns (AverageResponse);
+    rpc Maximum (stream MaximumRequest) returns (stream MaximumResponse);
+    rpc Sqrt (SqrtRequest) returns (SqrtResponse);
+}
+
+// protoc -Icalculator/proto --go_opt=module=github/vikashparashar/gRPC_Tutorials/calculator/proto --go_out=calculator/proto/. --go-grpc_opt=module=github/vikashparashar/gRPC_Tutorials/calculator/proto --go-grpc_out=calculator/proto/. calculator/proto/calculator.proto

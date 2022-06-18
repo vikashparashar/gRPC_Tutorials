@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	pb "github/vikashparashar/gRPC_Tutorials/greet/proto"
+	"io"
 	"log"
 	"net"
 
@@ -31,13 +33,35 @@ func main() {
 }
 func (s *Server) Single_Greet(ctx context.Context, in *pb.GreetRequest) (*pb.GreetResponse, error) {
 	log.Println("____Single_Greet_Function Was Invoked At Server____")
+	return &pb.GreetResponse{Result: "Hello" + in.Name}, nil
 }
 func (s *Server) Greet_Many_Times(in *pb.GreetRequest, stream pb.GreetService_Greet_Many_TimesServer) error {
 	log.Println("____Greet_Many_Times_Function Was Invoked At Server____")
+	for i := 0; i < 5; i++ {
+		log.Println("Sending Response To Server !")
+		err := stream.Send(&pb.GreetResponse{Result: fmt.Sprintf("Hello Mr. %v , Times : %v", in.Name, i)})
+		if err != nil {
+			log.Fatalf("Server Streaming Error : %v\n", err)
+		}
+	}
+	return nil
 }
+
 func (s *Server) Long_Greet(stream pb.GreetService_Long_GreetServer) error {
 	log.Println("____Long_Greet_Function Was Invoked At Server____")
+	for {
+		var res string
+		req, err := stream.Recv()
+		if err == io.EOF {
+			stream.SendAndClose(&pb.GreetResponse{Result: res})
+		}
+		if err != nil {
+			log.Fatalln("Internal Server Error")
+		}
+		res += fmt.Sprintf("Hello %v , You Are Welcome To gRPC Tutorial", req.Name)
+	}
 }
-func (s *Server) Greet_Every_One(stream pb.GreetService_Greet_Every_OneServer) error {
-	log.Println("____Greet_Every_One_Function Was Invoked At Server____")
-}
+
+// func (s *Server) Greet_Every_One(stream pb.GreetService_Greet_Every_OneServer) error {
+// 	log.Println("____Greet_Every_One_Function Was Invoked At Server____")
+// }

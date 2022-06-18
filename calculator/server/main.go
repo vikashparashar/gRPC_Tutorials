@@ -32,16 +32,19 @@ func main() {
 
 func (s *Server) Sum(ctx context.Context, in *pb.SumRequest) (*pb.SumResponse, error) {
 	log.Println("____Sum_Function Was Invoked At Server____")
+	return &pb.SumResponse{Result: in.NumberOne + in.NumberTwo}, nil
 }
+
 func (s *Server) Primes(in *pb.PrimeRequest, stream pb.CalculatorService_PrimesServer) error {
 	log.Println("____Primes_Function Was Invoked At Server____")
 }
-func (s *Server) Average(stream pb.CalculatorService_AverageServer) error {
-	log.Println("____Average_Function Was Invoked At Server____")
-}
-func (s *Server) Maximum(stream pb.CalculatorService_MaximumServer) error {
-	log.Println("____Maximum_Function Was Invoked At Server____")
-}
-func (s *Server) Sqrt(ctx context.Context, in *pb.SqrtRequest) (*pb.SqrtResponse, error) {
-	log.Println("____Sqrt_Function Was Invoked At Server____")
-}
+
+// func (s *Server) Average(stream pb.CalculatorService_AverageServer) error {
+// 	log.Println("____Average_Function Was Invoked At Server____")
+// }
+// func (s *Server) Maximum(stream pb.CalculatorService_MaximumServer) error {
+// 	log.Println("____Maximum_Function Was Invoked At Server____")
+// }
+// func (s *Server) Sqrt(ctx context.Context, in *pb.SqrtRequest) (*pb.SqrtResponse, error) {
+// 	log.Println("____Sqrt_Function Was Invoked At Server____")
+// }
